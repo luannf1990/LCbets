@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCBets - Sistema de Gerenciamento de Apostas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h3 class="text-white">LCBets</h3>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" id="dashboard-link">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="apostas-link">
+                                <i class="bi bi-list-check me-2"></i>
+                                Minhas Apostas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="saldos-link">
+                                <i class="bi bi-cash-stack me-2"></i>
+                                Saldos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="financeiro-link">
+                                <i class="bi bi-currency-exchange me-2"></i>
+                                Financeiro
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="casas-link">
+                                <i class="bi bi-building me-2"></i>
+                                Casas de Apostas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="relatorios-link">
+                                <i class="bi bi-file-earmark-text me-2"></i>
+                                Relatórios
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="view-content">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Dashboard</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button type="button" class="btn btn-sm btn-outline-primary me-2" id="nova-aposta-btn">
+                                <i class="bi bi-plus-circle"></i> Nova Aposta
+                            </button>
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">Compartilhar</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cards Row -->
+                    <div class="row mb-4">
+                        <!-- Bankroll Total Card -->
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Bankroll Total</h5>
+                                        <span class="badge bg-light text-dark">Todas as casas</span>
+                                    </div>
+                                    <h2 class="mt-3 mb-3" id="bankroll-total">R$ 0,00</h2>
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-info mt-2 btn-extrato-bankroll" id="ver-extrato-bankroll-btn">
+                                        <i class="bi bi-list-ul me-1"></i> Ver Extrato
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lucro Acumulado Card -->
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Lucro Acumulado</h5>
+                                        <span class="badge bg-light text-dark">Todas as apostas</span>
+                                    </div>
+                                    <h2 class="mt-3 mb-3" id="lucro-acumulado">R$ 0,00</h2>
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-info mt-2 btn-extrato-lucro" id="ver-extrato-lucro-btn">
+                                        <i class="bi bi-list-ul me-1"></i> Ver Extrato
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROI Geral Card -->
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">ROI Geral</h5>
+                                        <span class="badge bg-light text-dark">Retorno/Investimento</span>
+                                    </div>
+                                    <h2 class="mt-3 mb-3" id="roi-geral">0,00%</h2>
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Apostas Pendentes Card -->
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Apostas Pendentes</h5>
+                                        <span class="badge bg-warning text-dark" id="num-apostas-pendentes">0</span>
+                                    </div>
+                                    <h2 class="mt-3 mb-3" id="valor-apostas-pendentes">R$ 0,00</h2>
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <!-- Evolução do Bankroll Chart -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Evolução do Lucro</h5>
+                                    <canvas id="bankroll-chart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROI por Casa de Apostas Chart -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">ROI por Casa de Apostas</h5>
+                                    <canvas id="roi-chart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Meta Mensal Card -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title">Meta Mensal</h5>
+                                        <div>
+                                            <span id="meta-valor-atual">R$ 0,00</span> / 
+                                            <span id="meta-valor-total">R$ 1.000,00</span>
+                                            <button class="btn btn-sm btn-outline-primary ms-2" id="editar-meta-btn">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" id="meta-progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apostas Pendentes List -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Apostas Pendentes</h5>
+                                    <a href="#" id="ver-todas-pendentes" class="btn btn-sm btn-outline-primary">Ver todas</a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Evento</th>
+                                                    <th>Mercado</th>
+                                                    <th>Casa</th>
+                                                    <th>Data</th>
+                                                    <th>Odd</th>
+                                                    <th>Valor</th>
+                                                    <th>Retorno</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="apostas-pendentes-tbody">
+                                                <!-- Apostas pendentes serão inseridas aqui via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apostas View -->
+                <div id="apostas-view" class="view-content d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Minhas Apostas</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button type="button" class="btn btn-sm btn-outline-primary me-2" id="nova-aposta-btn-2">
+                                <i class="bi bi-plus-circle"></i> Nova Aposta
+                            </button>
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">Filtrar</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label for="filtro-status" class="form-label">Status</label>
+                                            <select class="form-select" id="filtro-status">
+                                                <option value="todos" selected>Todos</option>
+                                                <option value="pendente">Pendente</option>
+                                                <option value="ganhou">Ganhou</option>
+                                                <option value="perdeu">Perdeu</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="filtro-casa" class="form-label">Casa de Apostas</label>
+                                            <select class="form-select" id="filtro-casa">
+                                                <option value="todas" selected>Todas</option>
+                                                <!-- Casas serão inseridas aqui via JavaScript -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="filtro-data-inicio" class="form-label">Data Início</label>
+                                            <input type="date" class="form-control" id="filtro-data-inicio">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="filtro-data-fim" class="form-label">Data Fim</label>
+                                            <input type="date" class="form-control" id="filtro-data-fim">
+                                        </div>
+                                        <div class="col-12 text-end">
+                                            <button class="btn btn-primary" id="aplicar-filtros-btn">Aplicar Filtros</button>
+                                            <button class="btn btn-outline-secondary" id="limpar-filtros-btn">Limpar Filtros</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Apostas -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Data</th>
+                                                    <th>Evento</th>
+                                                    <th>Mercado</th>
+                                                    <th>Casa</th>
+                                                    <th>Valor</th>
+                                                    <th>Odd</th>
+                                                    <th>Retorno</th>
+                                                    <th>Status</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="apostas-tbody">
+                                                <!-- Apostas serão inseridas aqui via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Casas de Apostas View -->
+                <div id="casas-view" class="view-content d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Casas de Apostas</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="nova-casa-btn">
+                                <i class="bi bi-plus-circle"></i> Nova Casa
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cards de Casas de Apostas -->
+                    <div class="row" id="casas-cards-container">
+                        <!-- Casas serão inseridas aqui via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Financeiro View -->
+                <div id="financeiro-view" class="view-content d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Financeiro</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-success" id="deposito-btn">Depósito</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" id="saque-btn">Saque</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="transferencia-btn">Transferência</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extrato do Bankroll -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Extrato do Bankroll</h5>
+                                    <button class="btn btn-sm btn-outline-info" id="ver-extrato-bankroll-btn-2">
+                                        <i class="bi bi-list-ul me-1"></i> Ver Extrato Completo
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Descrição</th>
+                                                    <th>Casa</th>
+                                                    <th>Tipo</th>
+                                                    <th>Valor</th>
+                                                    <th>Saldo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="extrato-tbody">
+                                                <!-- Transações serão inseridas aqui via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Nova Aposta Modal -->
+    <div class="modal fade" id="nova-aposta-modal" tabindex="-1" aria-labelledby="nova-aposta-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nova-aposta-modal-label">Nova Aposta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="nova-aposta-form">
+                        <div class="mb-3">
+                            <label for="aposta-casa" class="form-label">Casa de Apostas</label>
+                            <select class="form-select" id="aposta-casa" required>
+                                <!-- Casas serão inseridas aqui via JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aposta-data" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="aposta-data" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aposta-evento" class="form-label">Evento</label>
+                            <input type="text" class="form-control" id="aposta-evento" placeholder="Ex: Flamengo x Vasco" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aposta-mercado" class="form-label">Mercado</label>
+                            <input type="text" class="form-control" id="aposta-mercado" placeholder="Ex: Over 2.5 gols" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aposta-valor" class="form-label">Valor Apostado</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="aposta-valor" min="1" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aposta-odd" class="form-label">Odd</label>
+                            <input type="number" class="form-control" id="aposta-odd" min="1.01" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aposta-retorno" class="form-label">Retorno Potencial</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="text" class="form-control" id="aposta-retorno" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvar-aposta-btn">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nova Casa Modal -->
+    <div class="modal fade" id="nova-casa-modal" tabindex="-1" aria-labelledby="nova-casa-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nova-casa-modal-label">Nova Casa de Apostas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="nova-casa-form">
+                        <div class="mb-3">
+                            <label for="casa-nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="casa-nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="casa-saldo" class="form-label">Saldo Inicial</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="casa-saldo" min="0" step="0.01" value="0">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvar-casa-btn">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Depósito Modal -->
+    <div class="modal fade" id="deposito-modal" tabindex="-1" aria-labelledby="deposito-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deposito-modal-label">Realizar Depósito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="deposito-form">
+                        <div class="mb-3">
+                            <label for="deposito-casa" class="form-label">Casa de Apostas</label>
+                            <select class="form-select" id="deposito-casa" required>
+                                <!-- Casas serão inseridas aqui via JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deposito-valor" class="form-label">Valor</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="deposito-valor" min="1" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deposito-descricao" class="form-label">Descrição (opcional)</label>
+                            <textarea class="form-control" id="deposito-descricao" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="confirmar-deposito-btn">Confirmar Depósito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saque Modal -->
+    <div class="modal fade" id="saque-modal" tabindex="-1" aria-labelledby="saque-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saque-modal-label">Realizar Saque</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="saque-form">
+                        <div class="mb-3">
+                            <label for="saque-casa" class="form-label">Casa de Apostas</label>
+                            <select class="form-select" id="saque-casa" required>
+                                <!-- Casas serão inseridas aqui via JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="saque-valor" class="form-label">Valor</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="saque-valor" min="1" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="saque-descricao" class="form-label">Descrição (opcional)</label>
+                            <textarea class="form-control" id="saque-descricao" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmar-saque-btn">Confirmar Saque</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transferência Modal -->
+    <div class="modal fade" id="transferencia-modal" tabindex="-1" aria-labelledby="transferencia-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transferencia-modal-label">Realizar Transferência</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="transferencia-form">
+                        <div class="mb-3">
+                            <label for="transferencia-origem" class="form-label">Casa de Origem</label>
+                            <select class="form-select" id="transferencia-origem" required>
+                                <!-- Casas serão inseridas aqui via JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transferencia-destino" class="form-label">Casa de Destino</label>
+                            <select class="form-select" id="transferencia-destino" required>
+                                <!-- Casas serão inseridas aqui via JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transferencia-valor" class="form-label">Valor</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="transferencia-valor" min="1" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transferencia-descricao" class="form-label">Descrição (opcional)</label>
+                            <textarea class="form-control" id="transferencia-descricao" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmar-transferencia-btn">Confirmar Transferência</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editar Meta Modal -->
+    <div class="modal fade" id="editar-meta-modal" tabindex="-1" aria-labelledby="editar-meta-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editar-meta-modal-label">Editar Meta Mensal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editar-meta-form">
+                        <div class="mb-3">
+                            <label for="meta-valor" class="form-label">Valor da Meta</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="meta-valor" min="1" step="0.01" value="1000" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvar-meta-btn">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Extrato da Casa de Apostas -->
+    <div class="modal fade" id="extrato-casa-modal" tabindex="-1" aria-labelledby="extrato-casa-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="extrato-casa-modal-label">Extrato da Casa de Apostas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filtros -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="filtro-tipo-transacao" class="form-label">Tipo de Transação</label>
+                                    <select class="form-select" id="filtro-tipo-transacao">
+                                        <option value="todos" selected>Todos</option>
+                                        <option value="depósito">Depósito</option>
+                                        <option value="saque">Saque</option>
+                                        <option value="transferência">Transferência</option>
+                                        <option value="aposta">Aposta</option>
+                                        <option value="retorno">Retorno</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filtro-data-inicio-casa" class="form-label">Data Início</label>
+                                    <input type="date" class="form-control" id="filtro-data-inicio-casa">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filtro-data-fim-casa" class="form-label">Data Fim</label>
+                                    <input type="date" class="form-control" id="filtro-data-fim-casa">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button class="btn btn-primary" id="aplicar-filtros-casa-btn">Aplicar Filtros</button>
+                                    <button class="btn btn-outline-secondary" id="limpar-filtros-casa-btn">Limpar Filtros</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabela de Extrato -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Descrição</th>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extrato-casa-tbody">
+                                <!-- Transações serão inseridas aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Extrato do Bankroll Total -->
+    <div class="modal fade" id="extrato-bankroll-modal" tabindex="-1" aria-labelledby="extrato-bankroll-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="extrato-bankroll-modal-label">Extrato Completo do Bankroll Total</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filtros -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="filtro-casa-bankroll" class="form-label">Casa de Apostas</label>
+                                    <select class="form-select" id="filtro-casa-bankroll">
+                                        <option value="todas" selected>Todas</option>
+                                        <!-- Casas serão inseridas aqui via JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtro-tipo-bankroll" class="form-label">Tipo de Transação</label>
+                                    <select class="form-select" id="filtro-tipo-bankroll">
+                                        <option value="todos" selected>Todos</option>
+                                        <option value="depósito">Depósito</option>
+                                        <option value="saque">Saque</option>
+                                        <option value="transferência">Transferência</option>
+                                        <option value="aposta">Aposta</option>
+                                        <option value="retorno">Retorno</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtro-data-inicio-bankroll" class="form-label">Data Início</label>
+                                    <input type="date" class="form-control" id="filtro-data-inicio-bankroll">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtro-data-fim-bankroll" class="form-label">Data Fim</label>
+                                    <input type="date" class="form-control" id="filtro-data-fim-bankroll">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button class="btn btn-primary" id="aplicar-filtros-bankroll-btn">Aplicar Filtros</button>
+                                    <button class="btn btn-outline-secondary" id="limpar-filtros-bankroll-btn">Limpar Filtros</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabela de Extrato -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Descrição</th>
+                                    <th>Casa</th>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extrato-bankroll-tbody">
+                                <!-- Transações serão inseridas aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Extrato do Lucro Acumulado -->
+    <div class="modal fade" id="extrato-lucro-modal" tabindex="-1" aria-labelledby="extrato-lucro-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="extrato-lucro-modal-label">Extrato Detalhado do Lucro Acumulado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Filtros -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="filtro-casa-lucro" class="form-label">Casa de Apostas</label>
+                                    <select class="form-select" id="filtro-casa-lucro">
+                                        <option value="todas" selected>Todas</option>
+                                        <!-- Casas serão inseridas aqui via JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtro-status-lucro" class="form-label">Status</label>
+                                    <select class="form-select" id="filtro-status-lucro">
+                                        <option value="todos" selected>Todos</option>
+                                        <option value="Ganhou">Ganhou</option>
+                                        <option value="Perdeu">Perdeu</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtro-data-inicio-lucro" class="form-label">Data Início</label>
+                                    <input type="date" class="form-control" id="filtro-data-inicio-lucro">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtro-data-fim-lucro" class="form-label">Data Fim</label>
+                                    <input type="date" class="form-control" id="filtro-data-fim-lucro">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button class="btn btn-primary" id="aplicar-filtros-lucro-btn">Aplicar Filtros</button>
+                                    <button class="btn btn-outline-secondary" id="limpar-filtros-lucro-btn">Limpar Filtros</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabela de Extrato -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Evento</th>
+                                    <th>Mercado</th>
+                                    <th>Casa</th>
+                                    <th>Valor Apostado</th>
+                                    <th>Odd</th>
+                                    <th>Status</th>
+                                    <th>Lucro/Prejuízo</th>
+                                    <th>Lucro Acumulado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extrato-lucro-tbody">
+                                <!-- Apostas serão inseridas aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container">
+        <!-- Toasts serão inseridos aqui via JavaScript -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="utils.js"></script>
+    <script src="database.js"></script>
+    <script src="models.js"></script>
+    <script src="barra-metas.js"></script>
+    <script src="extrato-casas-apostas.js"></script>
+    <script src="extrato-bankroll-total.js"></script>
+    <script src="extrato-lucro-acumulado.js"></script>
+    <script src="integrar-extratos.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
